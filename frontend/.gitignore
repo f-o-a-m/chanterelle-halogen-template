@@ -1,0 +1,4 @@
+/dist/*.css
+/dist/*.html
+/dist/*.js
+/dist/*.map
