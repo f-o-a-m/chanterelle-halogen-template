@@ -12,7 +12,7 @@ import DOM.Node.ParentNode (QuerySelector(..))
 import Halogen.Aff as HA
 import Halogen.VDom.Driver (runUI)
 import Partial.Unsafe (unsafeCrashWith)
-import Button as B
+import App.Component.List (list)
 
 main
   :: forall eff.
@@ -26,4 +26,4 @@ main = HA.runHalogenAff do
   el <- HA.selectElement $ QuerySelector "#app"
   case el of
     Nothing -> unsafeCrashWith "div#app has to be defined"
-    Just el' -> runUI B.myButton unit el'
+    Just el' -> runUI list unit el'
