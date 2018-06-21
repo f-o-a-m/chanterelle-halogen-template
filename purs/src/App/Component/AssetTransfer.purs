@@ -2,23 +2,25 @@ module App.Component.AssetTransfer where
 
 import Prelude
 
-import App.Model (AssetTransfer)
+import App.Component.Image (ImageQuery, image)
+import App.Model (AssetTransfer, initialImage)
+import Control.Monad.Aff.Class (class MonadAff)
 import Data.Maybe (Maybe(..))
+import Data.String as Str
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
 import Network.Ethereum.Web3.Types (Address)
-import Data.String as Str
 
--- | The task component query algebra.
+-- | The transfer component query algebra.
 data AssetTransferQuery a
   = SelectUserAddress Address a
 
--- | The task component definition.
-assetTransfer :: forall m. AssetTransfer -> H.Component HH.HTML AssetTransferQuery Unit Void m
+-- | The transfer component definition.
+assetTransfer :: forall eff m. MonadAff eff m => AssetTransfer -> H.Component HH.HTML AssetTransferQuery Unit Void m
 assetTransfer initialState =
-  H.component
+  H.parentComponent
     { initialState: const initialState
     , render
     , eval
@@ -26,9 +28,11 @@ assetTransfer initialState =
     }
   where
 
-  render :: AssetTransfer -> H.ComponentHTML AssetTransferQuery
-  render at =
-    HH.li [HP.class_ (HH.ClassName "kitty-info")]
+  render :: AssetTransfer -> H.ParentHTML AssetTransferQuery ImageQuery Unit m
+  render at = HH.li [HP.class_ (HH.ClassName "kitty-tile")]
+    [ HH.div [HP.class_ (HH.ClassName "kitty-pic")]
+      [renderImage at.imageURL]
+    , HH.div [HP.class_ (HH.ClassName "kitty-info")]
       [ HH.div [HP.class_ (HH.ClassName "kitty-info-headings")]
         [ HH.h6_ [HH.text "to: "]
         , HH.h6_ [HH.text "from: "]
@@ -48,8 +52,17 @@ assetTransfer initialState =
         , HH.h5_ [HH.text $ show $ at.blockNumber]
         ]
       ]
+    ]
 
-  eval :: AssetTransferQuery ~> H.ComponentDSL AssetTransfer AssetTransferQuery Void m
+  renderImage :: String -> H.ParentHTML AssetTransferQuery ImageQuery Unit m
+  renderImage url =
+    HH.slot
+      unit
+      (image $ initialImage url)
+      unit
+      (HE.input absurd)
+
+  eval :: AssetTransferQuery ~> H.ParentDSL AssetTransfer AssetTransferQuery ImageQuery Unit Void m
   eval (SelectUserAddress _ next) = pure next
 
   addressLink address =

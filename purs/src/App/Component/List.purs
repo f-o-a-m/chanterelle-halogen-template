@@ -4,7 +4,8 @@ import Prelude
 
 import App.Component.AssetTransfer (AssetTransferQuery, assetTransfer)
 import App.Model (List, AssetTransfer, initialList)
-import Data.Array (cons)
+import Control.Monad.Aff.Class (class MonadAff)
+import Data.Array (cons, take)
 import Data.Maybe (Maybe(..))
 import Halogen as H
 import Halogen.HTML as HH
@@ -15,13 +16,12 @@ import Halogen.HTML.Properties as HP
 data ListQuery a
   = AddAssetTransfer AssetTransfer a
 
--- | The slot value that is filled by tasks during the install process.
 newtype AssetTransferSlot = AssetTransferSlot Int
 derive instance eqAssetTransferSlot :: Eq AssetTransferSlot
 derive instance ordAssetTransferSlot :: Ord AssetTransferSlot
 
 -- | The list component definition.
-list :: forall m. Applicative m => H.Component HH.HTML ListQuery Unit Void m
+list :: forall eff m. MonadAff eff m => H.Component HH.HTML ListQuery Unit Void m
 list =
   H.parentComponent
     { initialState: const initialList
@@ -35,11 +35,11 @@ list =
   render st =
     HH.div [HP.class_ (HH.ClassName "kitty-container")]
       [ HH.div [HP.class_ (HH.ClassName "kitty-list")]
-        [HH.ul_ (map renderTask st.transfers)]
+        [HH.ul_ (map renderTransfer st.transfers)]
       ]
 
-  renderTask :: {transferId :: Int, transfer :: AssetTransfer} -> H.ParentHTML ListQuery AssetTransferQuery AssetTransferSlot m
-  renderTask t =
+  renderTransfer :: {transferId :: Int, transfer :: AssetTransfer} -> H.ParentHTML ListQuery AssetTransferQuery AssetTransferSlot m
+  renderTransfer t =
     HH.slot
       (AssetTransferSlot t.transferId)
       (assetTransfer t.transfer)
@@ -48,12 +48,12 @@ list =
 
   eval :: ListQuery ~> H.ParentDSL List ListQuery AssetTransferQuery AssetTransferSlot Void m
   eval (AddAssetTransfer at next) = do
-    H.modify (addTask at)
+    H.modify (addTransfer at)
     pure next
 
 
--- | Adds a task to the current state.
-addTask :: AssetTransfer -> List -> List
-addTask at st =
+-- | Adds a transfer to the current state.
+addTransfer :: AssetTransfer -> List -> List
+addTransfer at st =
   let newTransfer = {transferId: st.nextId, transfer: at}
-  in st { nextId = st.nextId + 1, transfers = newTransfer `cons` st.transfers }
+  in st { nextId = st.nextId + 1, transfers = take 20 $ newTransfer `cons` st.transfers }

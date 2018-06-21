@@ -11,6 +11,7 @@ type AssetTransfer =
   , tokenId :: UIntN S256
   , transactionHash :: HexString
   , blockNumber :: BlockNumber
+  , imageURL :: String
   }
 
 
@@ -26,17 +27,16 @@ initialList =
   }
 
 
-type ImageState =
+type Image =
   { baseURL :: String
   , loadTryCount :: Int
   , loadStatus :: ImageLoadState
   }
 
 data ImageLoadState = Loading | Loaded | Failed
-data ImageAction = LoadFailed | LoadSucceeded | RetryLoading
 
-initialImageState :: String -> ImageState
-initialImageState baseURL =
+initialImage :: String -> Image
+initialImage baseURL =
   { baseURL
   , loadTryCount: 100
   , loadStatus: Loading

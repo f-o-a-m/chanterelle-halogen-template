@@ -59,6 +59,7 @@ main = HA.runHalogenAff do
                 , tokenId: t.tokenId
                 , transactionHash: c.transactionHash
                 , blockNumber: c.blockNumber
+                , imageURL: "https://storage.googleapis.com/ck-kitty-image/0x06012c8cf97bead5deae237070f9587f8e7a266d/" <> show t.tokenId <> ".svg?"
                 }
           liftAff $ io.query $ H.action (AddAssetTransfer newAssetTransfer)
           pure ContinueEvent
