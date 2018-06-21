@@ -27,5 +27,6 @@ docker run --rm -p 8545:8545 -e ACCOUNTS_TO_CREATE=3 foamspace/cliquebait:latest
 
 ### Build, Serve frontend
 ```bash
-make parcel-start
+> make build-purs
+> make parcel-start
 ```
