@@ -54,17 +54,17 @@ main = HA.runHalogenAff do
         metamask <- liftEff' metamaskProvider
         void $ runWeb3 metamask $ do
           BlockNumber bn <- eth_blockNumber
-          let startingBlock = BlockNumber (embed 5777352)
-              fltr = eventFilter (Proxy :: Proxy SuperRare.SalePriceSet) Config.srAddress # _fromBlock .~ BN startingBlock
-          event' fltr 100 $ \(SuperRare.SalePriceSet sps) -> do
+          let startingBlock = BlockNumber (embed 5470342)
+              fltr = eventFilter (Proxy :: Proxy SuperRare.Transfer) Config.srAddress # _fromBlock .~ BN startingBlock
+          event' fltr 100 $ \(SuperRare.Transfer t) -> do
             (Change c) <- ask
-            eIPFSUrl <- lift $ SuperRare.tokenURI (defaultTransactionOptions # _to ?~ Config.srAddress) Latest {_tokenId: sps._tokenId}
+            eIPFSUrl <- lift $ SuperRare.tokenURI (defaultTransactionOptions # _to ?~ Config.srAddress) Latest {_tokenId: t._tokenId}
             url <- liftAff $ either (liftEff' <<< throw <<< show) getImageUrl eIPFSUrl
             Trace.traceA url
             let newAssetTransfer =
-                  { to: c.address
-                  , from: c.address
-                  , tokenId: sps._tokenId
+                  { to: t._to
+                  , from: t._from
+                  , tokenId: t._tokenId
                   , transactionHash: c.transactionHash
                   , blockNumber: c.blockNumber
                   , imageURL: url
