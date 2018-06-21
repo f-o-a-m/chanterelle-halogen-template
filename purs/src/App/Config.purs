@@ -2,17 +2,13 @@ module App.Config where
 
 import Prelude
 
-import Contracts.CryptoKitties as CK
-import Data.Either (Either)
-import Data.Lens ((?~))
 import Data.Maybe (fromJust)
-import Network.Ethereum.Web3 (Address, CallError, ChainCursor(..), Web3, _to, defaultTransactionOptions, mkAddress, mkHexString)
+import Network.Ethereum.Web3 (Address, mkAddress, mkHexString)
 import Partial.Unsafe (unsafePartial)
 
-ckAddress :: Address
-ckAddress = unsafePartial fromJust $
-            mkAddress =<< mkHexString "c7af99fe5513eb6710e6d5f44f9989da40f27f26"
+srAddress :: Address
+srAddress = unsafePartial fromJust $
+            mkAddress =<< mkHexString "41a322b28d0ff354040e2cbc676f0320d8c8850d"
 
-
-tokenContract :: forall eff. Web3 eff (Either CallError Address)
-tokenContract = CK.nonFungibleContract (defaultTransactionOptions # _to ?~ ckAddress) Latest
+--tokenContract :: forall eff. Web3 eff (Either CallError Address)
+--tokenContract = CK.nonFungibleContract (defaultTransactionOptions # _to ?~ ckAddress) Latest

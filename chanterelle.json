@@ -6,7 +6,7 @@
     "modules": [ "NavelCoin"
                ],
     "extra-abis": "dapp/abis",
-    "dependencies": [ "openzeppelin-solidity"
+    "dependencies": [ "zeppelin-solidity"
                     ],
     "purescript-generator": {
         "output-path": "purs/src",

@@ -38,7 +38,7 @@ image initialState =
       renderImage i =
          HH.img
            [ HP.class_ (HH.ClassName "Image-img")
-           , HP.src $ i.baseURL <> "try=" <> show i.loadTryCount
+           , HP.src i.baseURL
            , HE.onError (HE.input_ LoadFailed)
            , HE.onLoad (HE.input_ LoadSucceeded)
            ]
