@@ -1,33 +1,24 @@
-module App.Component.Task where
+module App.Component.AssetTransfer where
 
 import Prelude
 
-import Control.Monad.State as CMS
-
-import Data.Bifunctor (bimap)
+import App.Model (AssetTransfer)
 import Data.Maybe (Maybe(..))
-
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
-
-import App.Model (Task)
+import Network.Ethereum.Web3.Types (Address)
+import Data.String as Str
 
 -- | The task component query algebra.
-data TaskQuery a
-  = UpdateDescription String a
-  | ToggleCompleted Boolean a
-  | Remove a
-  | IsCompleted (Boolean -> a)
-
-data TaskMessage
-  = NotifyRemove
-  | Toggled Boolean
+data AssetTransferQuery a
+  = AssetTransfered AssetTransfer a
+  | SelectUserAddress Address a
 
 -- | The task component definition.
-task :: forall m. Task -> H.Component HH.HTML TaskQuery Unit TaskMessage m
-task initialState =
+assetTransfer :: forall m. AssetTransfer -> H.Component HH.HTML AssetTransferQuery Unit Void m
+assetTransfer initialState =
   H.component
     { initialState: const initialState
     , render
@@ -36,40 +27,43 @@ task initialState =
     }
   where
 
-  render :: Task -> H.ComponentHTML TaskQuery
-  render t =
-    HH.li_
-      [ HH.input
-          [ HP.type_ HP.InputCheckbox
-          , HP.title "Mark as completed"
-          , HP.checked t.completed
-          , HE.onChecked (HE.input ToggleCompleted)
-          ]
-      , HH.input
-          [ HP.type_ HP.InputText
-          , HP.placeholder "Task description"
-          , HP.autofocus true
-          , HP.value t.description
-          , HE.onValueChange (HE.input UpdateDescription)
-          ]
-      , HH.button
-          [ HP.title "Remove task"
-          , HE.onClick (HE.input_ Remove)
-          ]
-          [ HH.text "✖" ]
+  render :: AssetTransfer -> H.ComponentHTML AssetTransferQuery
+  render at =
+    HH.li [HP.class_ (HH.ClassName "kitty-info")]
+      [ HH.div [HP.class_ (HH.ClassName "kitty-info-headings")]
+        [ HH.h6_ [HH.text "to: "]
+        , HH.h6_ [HH.text "from: "]
+        , HH.h6_ [HH.text "tokenId: "]
+        , HH.h6_ [HH.text "transactionHash: "]
+        , HH.h6_ [HH.text "blockNumber: "]
+        ]
+      , HH.div [HP.class_ (HH.ClassName "kitty-info-details")]
+        [ HH.h5 [ HP.class_ (HH.ClassName "user-address-link")
+                , HE.onClick (HE.input_ $ SelectUserAddress at.to)
+                ] [addressLink at.to]
+        , HH.h5 [ HP.class_ (HH.ClassName "user-address-link")
+                , HE.onClick (HE.input_ $ SelectUserAddress at.from)
+                ] [addressLink at.from]
+        , HH.h5_ [HH.text $ show at.tokenId]
+        , HH.h5_ [txLink at.transactionHash]
+        , HH.h5_ [HH.text $ show $ at.blockNumber]
+        ]
       ]
 
-  eval :: TaskQuery ~> H.ComponentDSL Task TaskQuery TaskMessage m
-  eval (UpdateDescription desc next) = do
-    CMS.modify (_ { description = desc })
-    pure next
-  eval (ToggleCompleted b next) = do
-    CMS.modify (_ { completed = b })
-    H.raise (Toggled b)
-    pure next
-  eval (Remove next) = do
-    H.raise NotifyRemove
-    pure next
-  eval (IsCompleted reply) = do
-    b <- CMS.gets (_.completed)
-    pure (reply b)
+  eval :: AssetTransferQuery ~> H.ComponentDSL AssetTransfer AssetTransferQuery Void m
+  eval (AssetTransfered _ next) = pure next
+  eval (SelectUserAddress _ next) = pure next
+
+  addressLink address =
+    HH.a [ HP.href $ "https://etherscan.io/address/" <> show address, HP.target "_blank" ]
+         [ HH.text $ show address ]
+
+  txLink txHash =
+    HH.a [ HP.href $ "https://etherscan.io/tx/" <> show txHash, HP.target "_blank" ]
+         [ HH.text $ shortenLink $ show txHash ]
+
+  shortenLink :: String -> String
+  shortenLink str | Str.length str < 20 = str
+                  | otherwise  = short
+    where
+      short = Str.take 7 str <> "..." <> Str.drop (Str.length str - 5) str

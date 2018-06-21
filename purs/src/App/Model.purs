@@ -1,27 +1,29 @@
 module App.Model where
 
-type TaskId = Int
+import Network.Ethereum.Web3.Types (Address, HexString, BlockNumber)
+import Network.Ethereum.Web3.Solidity (UIntN)
+import Network.Ethereum.Web3.Solidity.Sizes (S256)
 
-type Task =
-  { description :: String
-  , completed :: Boolean
+type AssetTransfer =
+  { to :: Address
+  , from :: Address
+  , tokenId :: UIntN S256
+  , transactionHash :: HexString
+  , blockNumber :: BlockNumber
   }
 
-initialTask :: Task
-initialTask =
-  { description: ""
-  , completed: false
+type ImageState =
+  { baseURL :: String
+  , loadTryCount :: Int
+  , loadStatus :: ImageLoadState
   }
 
-type List =
-  { tasks :: Array TaskId
-  , nextId :: TaskId
-  , numCompleted :: Int
-  }
+data ImageLoadState = Loading | Loaded | Failed
+data ImageAction = LoadFailed | LoadSucceeded | RetryLoading
 
-initialList :: List
-initialList =
-  { tasks: []
-  , nextId: 1
-  , numCompleted: 0
+initialImageState :: String -> ImageState
+initialImageState baseURL =
+  { baseURL
+  , loadTryCount: 100
+  , loadStatus: Loading
   }
