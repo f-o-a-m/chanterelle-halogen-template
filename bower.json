@@ -28,7 +28,7 @@
     "purescript-websocket-simple": "^2.0.0",
     "purescript-argonaut-aeson-generic": "^0.1.0",
     "purescript-eth-core": "^2.0.0",
-    "purescript-chanterelle": "f-o-a-m/chanterelle#v0.10.0"
+    "purescript-chanterelle": "f-o-a-m/chanterelle#extra-abis"
   },
   "devDependencies": {
     "purescript-psci-support": "^3.0.0",

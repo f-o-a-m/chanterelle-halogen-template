@@ -2,9 +2,10 @@
     "name": "navel-token-app",
     "version": "0.0.1",
     "source-dir": "dapp/contracts",
-    "artifacts-dir": "abis",
-    "modules": [ "SuperRare"
+    "artifacts-dir": "dapp/build/abis",
+    "modules": [ "NavelCoin"
                ],
+    "extra-abis": "dapp/abis",
     "dependencies": [ "openzeppelin-solidity"
                     ],
     "purescript-generator": {
