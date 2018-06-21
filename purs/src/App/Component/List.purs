@@ -4,7 +4,7 @@ import Prelude
 
 import App.Component.AssetTransfer (AssetTransferQuery, assetTransfer)
 import App.Model (List, AssetTransfer, initialList)
-import Data.Array (snoc)
+import Data.Array (cons)
 import Data.Maybe (Maybe(..))
 import Halogen as H
 import Halogen.HTML as HH
@@ -56,4 +56,4 @@ list =
 addTask :: AssetTransfer -> List -> List
 addTask at st =
   let newTransfer = {transferId: st.nextId, transfer: at}
-  in st { nextId = st.nextId + 1, transfers = st.transfers `snoc` newTransfer }
+  in st { nextId = st.nextId + 1, transfers = newTransfer `cons` st.transfers }
