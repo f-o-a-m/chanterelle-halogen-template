@@ -13,8 +13,7 @@ import Data.String as Str
 
 -- | The task component query algebra.
 data AssetTransferQuery a
-  = AssetTransfered AssetTransfer a
-  | SelectUserAddress Address a
+  = SelectUserAddress Address a
 
 -- | The task component definition.
 assetTransfer :: forall m. AssetTransfer -> H.Component HH.HTML AssetTransferQuery Unit Void m
@@ -51,7 +50,6 @@ assetTransfer initialState =
       ]
 
   eval :: AssetTransferQuery ~> H.ComponentDSL AssetTransfer AssetTransferQuery Void m
-  eval (AssetTransfered _ next) = pure next
   eval (SelectUserAddress _ next) = pure next
 
   addressLink address =

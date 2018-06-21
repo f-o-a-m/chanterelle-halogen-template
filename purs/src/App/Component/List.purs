@@ -2,28 +2,23 @@ module App.Component.List where
 
 import Prelude
 
+import App.Component.Task (AssetTransferQuery, assetTransfer)
+import App.Model (List, TaskId, AssetTransfer, initialList, initialTask)
 import Data.Array (snoc, filter, length)
-
 import Data.Map as M
 import Data.Maybe (Maybe(..), fromMaybe)
-
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 
-import App.Model (List, TaskId, initialList, initialTask)
-import App.Component.Task (TaskQuery(..), TaskMessage(..), task)
-
 -- | The list component query algebra.
 data ListQuery a
-  = NewTask a
-  | AllDone a
-  | HandleTaskMessage TaskId TaskMessage a
+  = AddAssetTransfer AssetTransfer a
 
 -- | The slot value that is filled by tasks during the install process.
-newtype TaskSlot = TaskSlot TaskId
-derive instance eqTaskSlot :: Eq TaskSlot
-derive instance ordTaskSlot :: Ord TaskSlot
+newtype AssetTransferSlot = AssetTransferSlot TransferId
+derive instance eqAssetTransferSlot :: Eq AssetTransferSlot
+derive instance ordAssetTransferSlot :: Ord AssetTransferSlot
 
 -- | The list component definition.
 list :: forall m. Applicative m => H.Component HH.HTML ListQuery Unit Void m
@@ -36,7 +31,7 @@ list =
     }
   where
 
-  render :: List -> H.ParentHTML ListQuery TaskQuery TaskSlot m
+  render :: List -> H.ParentHTML ListQuery AssetTransferQuery AssetTransferSlot m
   render st =
     HH.div_
       [ HH.h1_ [ HH.text "Todo list" ]
@@ -52,15 +47,15 @@ list =
           [ HH.text "All Done" ]
       ]
 
-  renderTask :: TaskId -> H.ParentHTML ListQuery TaskQuery TaskSlot m
-  renderTask taskId =
+  renderTask :: TransferId -> H.ParentHTML ListQuery TaskQuery AssetTransferSlot m
+  renderTask transferId =
     HH.slot
-      (TaskSlot taskId)
-      (task initialTask)
+      (AssetTransferSlot transferId)
+      (transfer initialTransfer)
       unit
-      (HE.input (HandleTaskMessage taskId))
+      (HE.input (HandleTransferMessage transferId))
 
-  eval :: ListQuery ~> H.ParentDSL List ListQuery TaskQuery TaskSlot Void m
+  eval :: ListQuery ~> H.ParentDSL List ListQuery AssetTransferQuery TransferSlot Void m
   eval (NewTask next) = do
     H.modify addTask
     pure next
