@@ -3,13 +3,13 @@ module App.Component.List where
 import Prelude
 
 import App.Component.AssetTransfer (AssetTransferQuery, assetTransfer)
-import App.Model (List, AssetTransfer, initialList, initialTransfer)
+import App.Model (List, AssetTransfer, initialList)
 import Data.Array (snoc)
 import Data.Maybe (Maybe(..))
 import Halogen as H
 import Halogen.HTML as HH
-import Halogen.HTML.Properties as HP
 import Halogen.HTML.Events as HE
+import Halogen.HTML.Properties as HP
 
 -- | The list component query algebra.
 data ListQuery a
@@ -38,17 +38,22 @@ list =
         [HH.ul_ (map renderTask st.transfers)]
       ]
 
-  renderTask :: Int -> H.ParentHTML ListQuery AssetTransferQuery AssetTransferSlot m
-  renderTask transferId =
+  renderTask :: {transferId :: Int, transfer :: AssetTransfer} -> H.ParentHTML ListQuery AssetTransferQuery AssetTransferSlot m
+  renderTask t =
     HH.slot
-      (AssetTransferSlot transferId)
-      (assetTransfer initialTransfer)
+      (AssetTransferSlot t.transferId)
+      (assetTransfer t.transfer)
       unit
       (HE.input absurd)
 
   eval :: ListQuery ~> H.ParentDSL List ListQuery AssetTransferQuery AssetTransferSlot Void m
-  eval (AddAssetTransfer _ next) = pure next
+  eval (AddAssetTransfer at next) = do
+    H.modify (addTask at)
+    pure next
+
 
 -- | Adds a task to the current state.
-addTask :: List -> List
-addTask st = st { nextId = st.nextId + 1, transfers = st.transfers `snoc` st.nextId }
+addTask :: AssetTransfer -> List -> List
+addTask at st =
+  let newTransfer = {transferId: st.nextId, transfer: at}
+  in st { nextId = st.nextId + 1, transfers = st.transfers `snoc` newTransfer }
