@@ -9,6 +9,7 @@ install:
 script:
   - make compile-contracts
   - make build-purs
+  - make parcel-build
 
 deploy:
   provider: pages
