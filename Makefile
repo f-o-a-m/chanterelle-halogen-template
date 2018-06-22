@@ -40,7 +40,7 @@ build-purs-strict: ## Build whole purescript src and test file in strict mode
 	pulp build --src-path purs/src -I purs/test -- --strict
 
 build-purs: ## Build whole purescript src and test file
-	pulp browserify --src-path purs/src -I purs/test
+	pulp build --src-path purs/src -I purs/test
 
 build-purs-watch: ## same as `make build-purs` but watches for changes for re-building
 	pulp -w build --src-path purs/src -I purs/test
