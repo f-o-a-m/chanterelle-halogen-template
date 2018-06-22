@@ -1,5 +1,7 @@
 # chanterelle-halogen-template
 
+[![Build Status](https://travis-ci.org/f-o-a-m/chanterelle-halogen-template.svg?branch=master)](https://travis-ci.org/f-o-a-m/chanterelle-halogen-template)
+
 [hosted here](https://f-o-a-m.github.io/chanterelle-halogen-template/)
 
 ## Purpose
