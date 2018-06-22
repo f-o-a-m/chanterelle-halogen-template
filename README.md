@@ -1,5 +1,6 @@
 # chanterelle-halogen-template
 
+[hosted here](https://f-o-a-m.github.io/chanterelle-halogen-template/)
 
 ## Purpose
 This is a template chanterelle project + halogen frontend. It comes with boiler plate for deploying an ERC20 token (NavelCoin).
