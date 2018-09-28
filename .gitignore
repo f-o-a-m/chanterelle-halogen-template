@@ -14,6 +14,7 @@ cliquebait-generated.json
 deploy.js
 compile.js
 /dapp/**/output
+/dapp/build/abis/
 server/server/.stack-work/
 .stack-work/
 purs/src/Contracts/

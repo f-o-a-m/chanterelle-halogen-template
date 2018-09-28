@@ -1,27 +1,26 @@
 module DApp.Deploy.ContractConfig
-  ( navelCoinConfig
+  ( simpleStorageConfig
   ) where
 
 import Prelude
-import Chanterelle.Internal.Types (ContractConfig)
+
 import Chanterelle.Deploy ((??))
-import Contracts.NavelCoin as NavelCoin
-import Network.Ethereum.Core.BigNumber (parseBigNumber, hexadecimal)
+import Chanterelle.Internal.Types (ContractConfig)
+import Contracts.SimpleStorage as SimpleStorage
+import Network.Ethereum.Web3 (embed)
 import Network.Ethereum.Web3.Solidity (UIntN, uIntNFromBigNumber)
 import Network.Ethereum.Web3.Solidity.Sizes (S256, s256)
 
 --------------------------------------------------------------------------------
--- | FoamToken
+-- | SimpleStorage
 --------------------------------------------------------------------------------
 
-navelCoinConfig :: ContractConfig (totalSupply :: UIntN S256)
-navelCoinConfig =
-  { filepath: "abis/NavelCoin.json"
-  , name: "NavelCoin"
-  , constructor: NavelCoin.constructor
-  , unvalidatedArgs: {totalSupply: _} <$> totalSupply
+simpleStorageConfig :: ContractConfig (_count :: UIntN S256)
+simpleStorageConfig =
+  { filepath: "dapp/build/abis/SimpleStorage.json"
+  , name: "SimpleStorage"
+  , constructor: SimpleStorage.constructor
+  , unvalidatedArgs: {_count: _} <$> initialCount
   }
   where
-    totalSupply =
-      let mSupply = parseBigNumber hexadecimal "fffffffffffffffffffffff" >>= uIntNFromBigNumber s256
-      in mSupply ?? "Coudn't parse totalSupply."
+    initialCount = (uIntNFromBigNumber s256 $ embed 42) ?? "Coudn't parse totalSupply."

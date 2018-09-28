@@ -25,7 +25,7 @@ The application is fairly simple. It is an event processesor for the [SuperRare]
 
 ### Run a local ethereum node (in a separate terminal)
 ```bash
-docker run --rm -p 8545:8545 -e foamspace/cliquebait:latest
+docker run --rm -it -p 8545:8545 -e ACCOUNTS_TO_CREATE=10 foamspace/cliquebait:latest
 ```
 
 ### Test and Deploy contracts

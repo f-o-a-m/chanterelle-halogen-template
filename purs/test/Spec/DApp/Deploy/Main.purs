@@ -11,7 +11,7 @@ import Control.Monad.Eff.Class (liftEff)
 import Control.Monad.Eff.Unsafe (unsafeCoerceEff)
 import Data.Maybe (Maybe(..), fromMaybe)
 import DApp.Deploy.Script (deployScript) as Deploy
-import Spec.DApp.Deploy.TokenSpec (tokenSpec) as Deploy
+import Spec.DApp.Deploy.SimpleStorageSpec (simpleStorageSpec)
 import Network.Ethereum.Web3 (ETH)
 import Node.FS.Aff (FS)
 import Node.Process as NP
@@ -33,4 +33,4 @@ main = void $ launchAff do
   nodeUrl <- liftEff $ fromMaybe "http://localhost:8545" <$> NP.lookupEnv "NODE_URL"
   testConfig <- buildTestConfig nodeUrl 60 Deploy.deployScript
   liftEff $ unsafeCoerceEff $ run' defaultConfig {timeout = Just (120 * 1000)} [consoleReporter] do
-    Deploy.tokenSpec    $ testConfig
+    simpleStorageSpec $ testConfig

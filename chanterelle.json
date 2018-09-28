@@ -1,9 +1,9 @@
 {
-    "name": "navel-token-app",
+    "name": "template-app",
     "version": "0.0.1",
     "source-dir": "dapp/contracts",
     "artifacts-dir": "dapp/build/abis",
-    "modules": [ "NavelCoin"
+    "modules": [ "SimpleStorage"
                ],
     "extra-abis": "dapp/abis",
     "dependencies": [ "zeppelin-solidity"
