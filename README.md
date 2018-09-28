@@ -5,8 +5,14 @@
 [hosted here](https://f-o-a-m.github.io/chanterelle-halogen-template/)
 
 ## Purpose
-This is a template chanterelle project + halogen frontend. It comes with boiler plate for deploying an ERC20 token (NavelCoin).
-It also has a lot of configuration for runing a Halogen app to support this contract.
+This is a template chanterelle project + halogen frontend. Or maybe it's more like an example. The point is to show how to make a simple application written in purescript utilizing
+
+1. chanterelle
+2. purescript-web3
+3. halogen
+
+The application is fairly simple. It is an event processesor for the [SuperRare](https://superrare.co/) contracts -- it starts polling for the creation events for all tokenized art pieces starting from the deployment block and continuing into the present.
+
 
 ## Instructions
 
@@ -19,7 +25,7 @@ It also has a lot of configuration for runing a Halogen app to support this cont
 
 ### Run a local ethereum node (in a separate terminal)
 ```bash
-docker run --rm -p 8545:8545 -e ACCOUNTS_TO_CREATE=3 foamspace/cliquebait:latest
+docker run --rm -p 8545:8545 -e foamspace/cliquebait:latest
 ```
 
 ### Test and Deploy contracts
@@ -31,5 +37,6 @@ docker run --rm -p 8545:8545 -e ACCOUNTS_TO_CREATE=3 foamspace/cliquebait:latest
 ### Build, Serve frontend
 ```bash
 > make build-purs
+> make parcel-build
 > make parcel-start
 ```
