@@ -23,9 +23,6 @@ install: ## Runs npm and bower install
 	npm install
 	bower install
 
-watch: ## Run filewatch for cliquebait-generated.json
-	fswatch ./cliquebait-generated.json | xargs -n1 ./cb.sh
-
 ####################
 # PURESCRIPT       #
 ####################
@@ -33,34 +30,18 @@ watch: ## Run filewatch for cliquebait-generated.json
 compile-contracts: ## Compile all contracts in dapp and write purescript ffi modules
 	pulp run --src-path purs/src/DApp/Compile -m DApp.Compile.Main
 
-build-purs-strict: ## Build whole purescript src and test file in strict mode
-	#  build bridge in normal node as it contains generated files which have warnigs
-	pulp build --src-path purs/src/bridge
-	# build src and test in strict mode
-	pulp build --src-path purs/src -I purs/test -- --strict
-
 build-purs: ## Build whole purescript src and test file
-	pulp build --src-path purs/src -I purs/test
-
-build-purs-watch: ## same as `make build-purs` but watches for changes for re-building
-	pulp -w build --src-path purs/src -I purs/test
-
-build-purs-editor: ## Same as `make build-purs` but with json output, it's used in `purescript.buildCommand` of `.vscode/settings.json`, this could potentially be useful for Atom users too.
-	pulp build --src-path purs/src -I purs/test -- --json-errors
+	pulp build --src-path purs/src -I purs/test -- --strict
 
 deploy-contracts: ## Deploy contracts in dapp project
 	pulp run --src-path purs/src/DApp -I purs/src/Contracts -m DApp.Deploy.Main
 
 test-purs-dapp: ## Run the dapp test suite
 	pulp test --src-path purs/src --test-path purs/test -m Spec.DApp.Deploy.Main
+
 ####################
 # FRONTEND         #
 ####################
-
-create-frontend-env: ## Create an .env file to include all needed ENV to build frontend
-	@echo "API_BASE_URL=$(API_BASE_URL)" > $(TCR_FRONTEND_ENV_FILEPATH)
-	@echo "File '$(TCR_FRONTEND_ENV_FILEPATH)' has been generated w/ following content:"
-	@cat $(TCR_FRONTEND_ENV_FILEPATH)
 
 parcel-start: ## Starts `Parcel` in watch mode, (you might want to build all purescript sources first). Note that you should also be running PureScript IDE server which compiles PureScript files on change, If it's not the case for you run `make build-purs-watch` too.
 	parcel --out-dir frontend/dist frontend/index.html
@@ -73,14 +54,3 @@ parcel-build: ## Builds assets
 	
 parcel-pages: ## Builds assets
 	parcel build --out-dir frontend/dist frontend/index.html --public-url "https://f-o-a-m.github.io/chanterelle-halogen-template/"
-
-frontend-lint: frontend-lint-js frontend-lint-sass ## run all frontend related linters
-
-frontend-lint-sass: ## Lint `sass` sources
-	sass-lint -q -v
-
-frontend-lint-js: ## Lint `js` sources
-	eslint .
-
-frontend-lint-js-fix: ## Fixes some of the lint issues of `js` sources
-	eslint --fix .

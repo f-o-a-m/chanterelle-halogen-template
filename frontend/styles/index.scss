@@ -5,23 +5,23 @@ body, html {
   padding: 0;
 }
 
-.kitty-container {
+.sr-container {
   font-family: 'Open Sans', Arial, sans-serif;
-  background-color: #6FCF97;
+  background-color: #2b332e;
   display: flex;
   justify-content: left;
   padding-left: 20px;
   min-height: 100vh;
 }
 
-.kitty-list {
+.sr-list {
   width: 80%;
   max-width: 800px;
 
 }
 
-.kitty-tile,
-.kitty-list:empty:before {
+.sr-tile,
+.sr-list:empty:before {
   width: 100%;
   background-color: white;
   border-radius: 35px;
@@ -29,7 +29,7 @@ body, html {
   box-shadow: 0px 2px 30px rgba(0,0,0,0.15);
 }
 
-.kitty-list:empty:before {
+.sr-list:empty:before {
   content: "Waiting for kittens :3";
   display: block;
   font-size: 2em;
@@ -37,7 +37,7 @@ body, html {
   text-align: center;
 }
 
-.kitty-tile {
+.sr-tile {
   max-width: 700px;
   display: flex;
   align-items: center;
@@ -46,29 +46,29 @@ body, html {
   // padding-bottom: 1rem;
 }
 
-.kitty-info {
+.sr-info {
   display: flex;
   flex: 0 0 auto;
   width: 50%;
   position: relative;
 }
 
-.kitty-info-headings {
+.sr-info-headings {
   position: absolute;
   width: 0;
 }
 
-.kitty-pic {
+.sr-pic {
   position: relative;
   flex: 1 1 auto;
   width: 50%;
 }
 
-.kitty-details {
+.sr-details {
   flex: 0.15;
 }
 
-.kitty-info-details {
+.sr-info-details {
   padding-left: .5rem;
   padding-top: 0.8rem;
   width: 100%;
@@ -145,7 +145,7 @@ body, html {
 }
 
 .Image--loading:before {
-  content: "Loading Kitty ...";
+  content: "Loading Sr ...";
   left: 50%;
   top: 50%;
   transform: translate3d(-50%, -50%, 0);
@@ -181,7 +181,7 @@ body, html {
 }
 
 .Image-error:after {
-  content: "Can't load Kitty :( click to retry";
+  content: "Cannot load Image, click to retry";
   display: block;
   text-align: center;
   position: absolute;

@@ -4,7 +4,6 @@ import Network.Ethereum.Web3.Solidity (UIntN)
 import Network.Ethereum.Web3.Solidity.Sizes (S256)
 import Network.Ethereum.Web3.Types (Address, BlockNumber, HexString)
 
-
 type AssetTransfer =
   { to :: Address
   , from :: Address
@@ -14,18 +13,16 @@ type AssetTransfer =
   , imageURL :: String
   }
 
-
-type List =
+type SRList =
   { transfers :: Array { transferId :: Int, transfer :: AssetTransfer }
   , nextId :: Int
   }
 
-initialList :: List
+initialList :: SRList
 initialList =
   { transfers: []
   , nextId: 1
   }
-
 
 type Image =
   { baseURL :: String

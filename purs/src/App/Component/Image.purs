@@ -11,14 +11,24 @@ import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
 
--- | The transfer component query algebra.
+{-
+
+  This component is responsible for rendering the image state. If the image is
+  still loading, we indicate this. If the image failed to load, we increment a retry count
+  and try again.
+
+-}
+
 data ImageQuery a
   = LoadFailed a
   | LoadSucceeded a
   | RetryLoading a
 
--- | The transfer component definition.
-image :: forall eff m. MonadAff eff m => Image -> H.Component HH.HTML ImageQuery Unit Void m
+image
+  :: forall eff m.
+     MonadAff eff m
+  => Image
+  -> H.Component HH.HTML ImageQuery Unit Void m
 image initialState =
   H.component
     { initialState: const initialState
@@ -28,7 +38,9 @@ image initialState =
     }
   where
 
-  render :: Image -> H.ComponentHTML ImageQuery
+  render
+    :: Image
+    -> H.ComponentHTML ImageQuery
   render img =
     let
       classNameModifiers = case img.loadStatus of
@@ -56,7 +68,8 @@ image initialState =
                   ] []
               ]
 
-  eval :: ImageQuery ~> H.ComponentDSL Image ImageQuery Void m
+  eval
+    :: ImageQuery ~> H.ComponentDSL Image ImageQuery Void m
   eval (LoadFailed next) = do
     st <- H.get
     if st.loadTryCount > 0
