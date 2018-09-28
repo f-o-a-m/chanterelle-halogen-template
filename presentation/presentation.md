@@ -9,7 +9,9 @@
 
 
 .
+
 .
+
 .
 
 
@@ -20,7 +22,9 @@
 
 
 .
+
 .
+
 .
 
  
@@ -30,7 +34,9 @@
 
 
 .
+
 .
+
 .
 
 
@@ -99,3 +105,32 @@
 
 
 ![FOAM architecture](https://github.com/f-o-a-m/mayday-presentation/blob/master/images/foam-architecture.png)
+
+
+.
+.
+.
+
+
+## Chanterelle
+
+
+.
+.
+.
+
+
+### What is it?
+- Chanterelle was originally developed to replace Truffle.js at FOAM
+  - At the time we had no good js developers
+  - Makes a lot of assumptions about how you want to use it
+- It offers
+  1. Deployment and Migrations
+  2. Testing setup
+  3. Code generation
+  
+
+.
+.
+.
+
