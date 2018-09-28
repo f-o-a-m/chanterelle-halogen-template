@@ -122,10 +122,11 @@
 - Chanterelle was originally developed to replace Truffle.js at FOAM
   - At the time we had no good js developers
   - Makes a lot of assumptions about how you want to use it
+- Has [documentation](https://chanterelle.readthedocs.io/en/stable/)
 - It offers
   1. Deployment and Migrations
   2. Testing setup
-  3. Code generation
+  3. PureScript Code generation
 
 .
 
@@ -133,3 +134,18 @@
 
 .
 
+## Cliquebait
+
+.
+
+.
+
+.
+
+### What is it?
+- A docker image containing a highly configurable geth node 
+- Was made to replace testRPC, pre-Ganache
+- With Chanterelle, can customize genesis block
+  - libraries
+  - existing dapps
+  - allocations
