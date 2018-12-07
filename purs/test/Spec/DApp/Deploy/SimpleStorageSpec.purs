@@ -9,7 +9,7 @@ import Control.Monad.Aff.AVar (AVAR, AVar, makeEmptyVar, putVar, takeVar)
 import Control.Monad.Aff.Class (liftAff)
 import Control.Monad.Aff.Console (CONSOLE)
 import Control.Monad.Aff.Console as C
-import Control.Monad.Reader (ReaderT(..), ask)
+import Control.Monad.Reader (ReaderT, ask)
 import DApp.Deploy.Script (SimpleStorageReceipt)
 import Data.Array ((!!))
 import Data.Either (Either(..))
