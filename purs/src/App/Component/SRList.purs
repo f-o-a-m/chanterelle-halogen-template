@@ -1,7 +1,6 @@
 module App.Component.SRList where
 
 import Prelude
-import App.Component.Image as Image
 import App.Component.AssetTransfer as AssetTransfer
 import App.Model (Transfer, SRList, AssetTransfer, initialList)
 import Data.Array (cons, take)
@@ -34,7 +33,7 @@ derive instance eqAssetTransferSlot :: Eq Slots'
 derive instance ordAssetTransferSlot :: Ord Slots'
 
 type Slots
-  = ( "srHeader" :: H.Slot Query Void Slots' )
+  = ( "srHeader" :: H.Slot AssetTransfer.Query Void Slots' )
 
 type Input
   = Unit
