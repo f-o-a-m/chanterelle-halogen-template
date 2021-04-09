@@ -2,16 +2,19 @@ module App.Component.AssetTransfer where
 
 import Prelude
 
-import App.Component.Image (ImageQuery, image)
+import App.Component.Image (ImageQuery, image, Input)
 import App.Model (AssetTransfer, initialImage)
-import Control.Monad.Aff.Class (class MonadAff)
 import Data.Maybe (Maybe(..))
 import Data.String as Str
+import Data.Symbol (SProxy(..))
+import Effect (Effect)
+import Effect.Aff.Class (class MonadAff)
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
-import Network.Ethereum.Web3.Types (Address)
+import Network.Ethereum.Web3.Types (Address, HexString)
+import Unsafe.Coerce (unsafeCoerce)
 
 {-
   This component is for the AssetCard, which is comprised of the image and
@@ -21,25 +24,27 @@ import Network.Ethereum.Web3.Types (Address)
 data AssetTransferQuery a
   = SelectUserAddress Address a
 
+_header :: SProxy "header"
+_header = SProxy
+
 assetTransfer
-  :: forall eff m.
-     MonadAff eff m
+  :: forall m.
+     MonadAff m
   => AssetTransfer
-  -> H.Component HH.HTML AssetTransferQuery Unit Void m
+  -> H.Component HH.HTML AssetTransferQuery Input Void m
 assetTransfer initialState =
-    H.parentComponent
+    H.mkComponent
        { initialState: const initialState
        , render
        , eval
-       , receiver: const Nothing
        }
   where
-    render
-      :: AssetTransfer
-      -> H.ParentHTML AssetTransferQuery ImageQuery Unit m
+    -- render
+    --   :: AssetTransfer
+    --   -> _ AssetTransferQuery ImageQuery Input m
     render at = HH.li [HP.class_ (HH.ClassName "sr-tile")]
       [ HH.div [HP.class_ (HH.ClassName "sr-pic")]
-        [renderImage at.imageURL]
+        [ ] -- [ renderImage at.imageURL ]
       , HH.div [HP.class_ (HH.ClassName "sr-info")]
         [ HH.div [HP.class_ (HH.ClassName "sr-info-headings")]
           [ HH.h6_ [HH.text "to: "]
@@ -50,36 +55,43 @@ assetTransfer initialState =
           ]
         , HH.div [HP.class_ (HH.ClassName "sr-info-details")]
           [ HH.h5 [ HP.class_ (HH.ClassName "user-address-link")
-                  , HE.onClick (HE.input_ $ SelectUserAddress at.to)
-                  ] [addressLink at.to]
+                  --, HE.onClick \_ -> Just (SelectUserAddress at.to)
+                  ] [] -- [ addressLink at.to ]
           , HH.h5 [ HP.class_ (HH.ClassName "user-address-link")
-                  , HE.onClick (HE.input_ $ SelectUserAddress at.from)
-                  ] [addressLink at.from]
-          , HH.h5_ [HH.text $ show at.tokenId]
-          , HH.h5_ [txLink at.transactionHash]
-          , HH.h5_ [HH.text $ show $ at.blockNumber]
+                  --, HE.onClick \_ -> Just (SelectUserAddress at.from)
+                  ] [] -- [ addressLink at.from ]
+          -- , HH.h5_ [HH.text $ show at.tokenId]
+          -- , HH.h5_ [txLink at.transactionHash]
+          -- , HH.h5_ [HH.text $ show $ at.blockNumber]
           ]
         ]
       ]
 
-    renderImage
-      :: String
-      -> H.ParentHTML AssetTransferQuery ImageQuery Unit m
-    renderImage url =
-      HH.slot
-        unit
-        (image $ initialImage url)
-        unit
-        (HE.input absurd)
+    -- renderImage
+    --   :: String
+    --   -> _ AssetTransferQuery ImageQuery Unit m
+    -- renderImage url = --unsafeCoerce unit
+    --   HH.slot
+    --     _header
+    --     unit
+    --     (image $ initialImage url)
+    --     (unsafeCoerce unit)
+    --     (unsafeCoerce absurd)
 
-    eval
-      :: AssetTransferQuery ~> H.ParentDSL AssetTransfer AssetTransferQuery ImageQuery Unit Void m
-    eval (SelectUserAddress _ next) = pure next
+    -- eval :: AssetTransferQuery ~> _ AssetTransfer AssetTransferQuery ImageQuery Unit Void m
+    eval = H.mkEval H.defaultEval
+      { handleAction = handleAction
+      , initialize = Just (unsafeCoerce absurd) -- FIXME
+      }
+      
+    handleAction (SelectUserAddress _ next) = pure next
 
+    addressLink :: Address -> _
     addressLink address =
       HH.a [ HP.href $ "https://etherscan.io/address/" <> show address, HP.target "_blank" ]
            [ HH.text $ show address ]
 
+    txLink :: HexString -> _
     txLink txHash =
       HH.a [ HP.href $ "https://etherscan.io/tx/" <> show txHash, HP.target "_blank" ]
            [ HH.text $ shortenLink $ show txHash ]

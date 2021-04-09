@@ -1,35 +1,38 @@
 {
-  "name": "foam.tcr",
+  "name": "chanterelle-halogen-example",
   "private": true,
   "scripts": {
-    "postshrinkwrap": "json --in-place -f package-lock.json -o json-0"
+    "build": "spago -x spago.dhall build",
+    "postshrinkwrap": "json --in-place -f package-lock.json -o json-0",
+    "chanterelle-build": "chanterelle build",
+    "deploy-contracts": "chanterelle deploy output/DApp.Deploy.Script/index.js"
+  },
+  "dependencies": {
+    "purescript": "^0.13.0",
+    "purescript-psa": "^0.7.3",
+    "bn.js": "^4.11.0",
+    "ethjs-provider-http": "^0.1.6",
+    "mkdirp": "^0.5.1",
+    "keccak": "^1.0.2",
+    "secp256k1": "^3.0.1",
+    "rlp": "^2.0.0",
+    "solc": "^0.6",
+    "spago": "^0.16.0"
   },
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "erc20-tokens": "ConsenSys/Tokens",
     "eslint": "^4.19.1",
+    "mkdirp": "^0.5.1",
     "node-sass": "^4.8.3",
     "parcel-bundler": "^1.7.1",
+    "purescript": "^0.13.8",
+    "purescript-psa": "^0.6.0",
     "rimraf": "^2.6.2",
     "sass-lint": "^1.12.1",
-    "bower": "^1.8.2",
-    "pulp": "^12.0.1",
-    "purescript": "^0.11.7",
-    "purescript-psa": "^0.6.0",
-    "erc20-tokens": "ConsenSys/Tokens",
     "sol-attrstore": "skmgoldin/sol-attrstore",
     "sol-dll": "skmgoldin/sol-dll",
     "solc": "^0.4.22",
-    "mkdirp": "^0.5.1",
     "zeppelin-solidity": "v1.6.0"
-  },
-  "dependencies": {
-    "bn.js": "^4.11.0",
-    "crypto-js": "^3.1.8",
-    "ethjs-provider-http": "^0.1.6",
-    "json": "^9.0.6",
-    "keccak": "^1.4.0",
-    "latlon-geohash": "^1.1.0",
-    "rlp": "^2.0.0",
-    "secp256k1": "^3.5.0",
-    "xhr2": "^0.1.4"
   }
 }

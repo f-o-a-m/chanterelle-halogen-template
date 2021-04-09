@@ -21,7 +21,7 @@ all: install
 
 install: ## Runs npm and bower install
 	npm install
-	bower install
+	spago build
 
 ####################
 # PURESCRIPT       #
@@ -31,13 +31,13 @@ compile-contracts: ## Compile all contracts in dapp and write purescript ffi mod
 	pulp run --src-path purs/src/DApp/Compile -m DApp.Compile.Main
 
 build-purs: ## Build whole purescript src and test file
-	pulp build --src-path purs/src -I purs/test -- --strict
+	spago -x spago.dhall build
 
 deploy-contracts: ## Deploy contracts in dapp project
 	pulp run --src-path purs/src/DApp -I purs/src/Contracts -m DApp.Deploy.Main
 
 test-purs-dapp: ## Run the dapp test suite
-	pulp test --src-path purs/src --test-path purs/test -m Spec.DApp.Deploy.Main
+	spago -x test.dhall test --src-path purs/src --test-path purs/test -m Spec.DApp.Deploy.Main
 
 ####################
 # FRONTEND         #

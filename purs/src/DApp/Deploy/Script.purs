@@ -19,9 +19,7 @@ type SimpleStorageReceipt =
   , address :: Address
   }
 
-deployScript
-  :: forall eff.
-     DeployM eff {simpleStorage :: SimpleStorageReceipt}
+deployScript :: DeployM { simpleStorage :: SimpleStorageReceipt }
 deployScript = do
   (DeployConfig {primaryAccount}) <- ask
   let bigGasLimit = unsafePartial fromJust $ parseBigNumber decimal "4712388"
