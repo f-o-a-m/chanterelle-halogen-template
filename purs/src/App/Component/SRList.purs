@@ -53,7 +53,7 @@ srList =
     , eval
     }
   where
-  render :: SRList -> H.ComponentHTML Action _ m
+  render :: SRList -> H.ComponentHTML Action Slots m
   render st =
     HH.div [ HP.class_ (HH.ClassName "sr-container") ]
       [ HH.div [ HP.class_ (HH.ClassName "sr-list") ]
@@ -62,7 +62,7 @@ srList =
 
   renderTransfer ::
     Transfer ->
-    HH.ComponentHTML Action _ m
+    HH.ComponentHTML Action Slots m
   renderTransfer t =
     HH.slot
       _srHeader
@@ -74,14 +74,14 @@ srList =
   eval ::
     forall i.
     H.HalogenQ Query Action i
-      ~> H.HalogenM SRList Action _ Message m
+      ~> H.HalogenM SRList Action Slots Message m
   eval =
     H.mkEval
       H.defaultEval
         { handleQuery = handleQuery
         }
 
-  handleQuery :: forall a. Query a -> H.HalogenM SRList Action _ Message m (Maybe a)
+  handleQuery :: forall a. Query a -> H.HalogenM SRList Action Slots Message m (Maybe a)
   handleQuery (AddAssetTransfer at next) = do
     _ <- H.modify (addTransfer at)
     pure $ Just next
