@@ -27,8 +27,8 @@ install: ## Runs npm and bower install
 # PURESCRIPT       #
 ####################
 
-compile-contracts: ## Compile all contracts in dapp and write purescript ffi modules
-	chanterelle compile
+build-contracts: ## Compile all contracts in dapp and write purescript ffi modules
+	chanterelle build
 
 build-purs: ## Build whole purescript src and test file
 	spago -x spago.dhall build

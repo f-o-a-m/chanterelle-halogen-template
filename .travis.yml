@@ -9,7 +9,7 @@ install:
   - chanterelle global-postinstall
   - make install
 script:
-  - make compile-contracts
+  - make build-contracts
   - make build-purs
   - make parcel-pages
 
