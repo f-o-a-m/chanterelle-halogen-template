@@ -1,4 +1,4 @@
-module DApp.Deploy.Script (SimpleStorageReceipt, deployScript) where
+module DApp.Deploy.Script (SimpleStorageReceipt, deploy) where
 
 import Prelude
 import Chanterelle.Deploy (deployContract)
@@ -18,8 +18,8 @@ type SimpleStorageReceipt
     , address :: Address
     }
 
-deployScript :: DeployM { simpleStorage :: SimpleStorageReceipt }
-deployScript = do
+deploy :: DeployM { simpleStorage :: SimpleStorageReceipt }
+deploy = do
   (DeployConfig { primaryAccount }) <- ask
   let
     bigGasLimit = unsafePartial fromJust $ parseBigNumber decimal "4712388"

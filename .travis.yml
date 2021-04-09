@@ -5,6 +5,8 @@ node_js: 11
 env:
   - PATH=$HOME/purescript:$PATH
 install:
+  - npm install -g f-o-a-m/chanterelle
+  - chanterelle global-postinstall
   - make install
 script:
   - make compile-contracts
@@ -17,4 +19,4 @@ deploy:
   github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
   local_dir: frontend/dist
   on:
-    branch: master 
+    branch: master

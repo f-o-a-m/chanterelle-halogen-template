@@ -82,5 +82,4 @@ main =
     resp <- unsafePartial $ fromRight <$> AX.get ResponseFormat.json ipfsUrl
     let
       mImageUrl = resp.body ^? _Object <<< ix "image" <<< _String
-    Console.log $ "Got " <> show mImageUrl
     maybe (liftEffect $ throw "Couldn't parse ipfs response") pure $ mImageUrl
