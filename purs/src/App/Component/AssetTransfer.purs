@@ -9,6 +9,7 @@ import Data.Symbol (SProxy(..))
 import Effect.Aff.Class (class MonadAff)
 import Halogen as H
 import Halogen.HTML as HH
+import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
 import Network.Ethereum.Web3.Types (Address, HexString)
 
@@ -17,10 +18,10 @@ import Network.Ethereum.Web3.Types (Address, HexString)
   the asset metadata with links to etherscan.
 -}
 data Query a
-  = SelectUserAddress Address a
+  = Next a
 
 data Action
-  = InitialAction
+  = SelectUserAddress Address
 
 type Slots
   = ( "tokenImage" :: H.Slot Image.Query Image.Message Unit )
@@ -62,12 +63,12 @@ assetTransfer initialState =
           , HH.div [ HP.class_ (HH.ClassName "sr-info-details") ]
               [ HH.h5
                   [ HP.class_ (HH.ClassName "user-address-link")
-                  --, HE.onClick \_ -> Just (SelectUserAddress at.to)
+                  , HE.onClick $ const $ Just (SelectUserAddress at.to)
                   ]
                   [ addressLink at.to ]
               , HH.h5
                   [ HP.class_ (HH.ClassName "user-address-link")
-                  --, HE.onClick \_ -> Just (SelectUserAddress at.from)
+                  , HE.onClick $ const $ Just (SelectUserAddress at.from)
                   ]
                   [ addressLink at.from ]
               , HH.h5_ [ HH.text $ show at.tokenId ]
@@ -98,7 +99,10 @@ assetTransfer initialState =
         }
 
   handleQuery :: forall a. Query a -> H.HalogenM AssetTransfer Action Slots Message m (Maybe a)
-  handleQuery (SelectUserAddress _ next) = pure $ Just next
+  handleQuery (Next next) = pure $ Just next
+
+  handleAction :: Action -> H.HalogenM AssetTransfer Action Slots Message m Unit
+  handleAction (SelectUserAddress a) = pure unit
 
   addressLink :: forall w i. Address -> HH.HTML w i
   addressLink address =
