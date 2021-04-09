@@ -13,8 +13,13 @@ type AssetTransfer
     , imageURL :: String
     }
 
+type Transfer
+  = { transferId :: Int
+    , transfer :: AssetTransfer
+    }
+
 type SRList
-  = { transfers :: Array { transferId :: Int, transfer :: AssetTransfer }
+  = { transfers :: Array Transfer
     , nextId :: Int
     }
 

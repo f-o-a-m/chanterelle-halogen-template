@@ -1,7 +1,6 @@
 module App.Main (main) where
 
 import Prelude
-
 import Data.Either (either, fromRight)
 import Data.Maybe (Maybe(..), maybe)
 import Affjax as AX

@@ -1,8 +1,9 @@
 module App.Component.SRList where
 
 import Prelude
+import App.Component.Image as Image
 import App.Component.AssetTransfer as AssetTransfer
-import App.Model (SRList, AssetTransfer, initialList)
+import App.Model (Transfer, SRList, AssetTransfer, initialList)
 import Data.Array (cons, take)
 import Data.Maybe (Maybe(..))
 import Data.Symbol (SProxy(..))
@@ -15,8 +16,9 @@ import Halogen.HTML.Properties as HP
   This component contains the list of all of the AssetCards, it is accumlated
   as a fold over the entire event history of the SuperRare contracts.
 -}
-_header :: SProxy "header"
-_header = SProxy
+
+_srHeader :: SProxy "srHeader"
+_srHeader = SProxy
 
 data Query a
   = AddAssetTransfer AssetTransfer a
@@ -30,6 +32,9 @@ newtype Slots'
 derive instance eqAssetTransferSlot :: Eq Slots'
 
 derive instance ordAssetTransferSlot :: Ord Slots'
+
+type Slots
+  = ( "srHeader" :: H.Slot Query Void Slots' )
 
 type Input
   = Unit
@@ -56,13 +61,11 @@ srList =
       ]
 
   renderTransfer ::
-    { transferId :: Int
-    , transfer :: AssetTransfer
-    } ->
+    Transfer ->
     HH.ComponentHTML Action _ m
   renderTransfer t =
     HH.slot
-      _header
+      _srHeader
       (AssetTransferSlot t.transferId)
       (AssetTransfer.assetTransfer t.transfer)
       unit
