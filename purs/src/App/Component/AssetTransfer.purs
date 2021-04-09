@@ -26,14 +26,16 @@ data Action
 type Slots
   = ( "tokenImage" :: H.Slot Image.Query Image.Message Unit )
 
+_tokenImage :: SProxy "tokenImage"
+_tokenImage = SProxy
+
 type Input
   = Unit
 
 type Message
   = Void
 
-_tokenImage :: SProxy "tokenImage"
-_tokenImage = SProxy
+
 
 assetTransfer ::
   forall m.
@@ -86,8 +88,8 @@ assetTransfer initialState =
       _tokenImage
       unit
       (Image.imageComponent $ initialImage url)
-      unit -- ?
-      absurd -- ?
+      unit
+      absurd
 
   eval ::
     H.HalogenQ Query Action Input

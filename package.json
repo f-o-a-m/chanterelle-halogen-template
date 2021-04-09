@@ -24,6 +24,7 @@
     "babel-core": "^6.26.3",
     "erc20-tokens": "ConsenSys/Tokens",
     "eslint": "^4.19.1",
+    "json": "^10.0.0",
     "mkdirp": "^0.5.1",
     "node-sass": "^4.8.3",
     "parcel-bundler": "^1.7.1",

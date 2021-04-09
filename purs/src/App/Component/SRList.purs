@@ -15,8 +15,7 @@ import Halogen.HTML.Properties as HP
   This component contains the list of all of the AssetCards, it is accumlated
   as a fold over the entire event history of the SuperRare contracts.
 -}
-_srHeader :: SProxy "srHeader"
-_srHeader = SProxy
+
 
 data Query a
   = AddAssetTransfer AssetTransfer a
@@ -33,6 +32,9 @@ derive instance ordAssetTransferSlot :: Ord Slots'
 
 type Slots
   = ( "srHeader" :: H.Slot AssetTransfer.Query Void Slots' )
+
+_srHeader :: SProxy "srHeader"
+_srHeader = SProxy
 
 type Input
   = Unit
