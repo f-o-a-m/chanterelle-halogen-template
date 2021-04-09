@@ -3,7 +3,6 @@ module DApp.Deploy.ContractConfig
   ) where
 
 import Prelude
-
 import Chanterelle.Internal.Types (ContractConfig)
 import Contracts.SimpleStorage as SimpleStorage
 import Network.Ethereum.Web3 (embed)
@@ -15,13 +14,12 @@ import Data.Maybe
 --------------------------------------------------------------------------------
 -- | SimpleStorage
 --------------------------------------------------------------------------------
-
-simpleStorageConfig :: ContractConfig (_count :: UIntN S256)
+simpleStorageConfig :: ContractConfig ( _count :: UIntN S256 )
 simpleStorageConfig =
   { filepath: "dapp/build/abis/SimpleStorage.json"
   , name: "SimpleStorage"
   , constructor: SimpleStorage.constructor
-  , unvalidatedArgs: pure {_count: initialCount }
+  , unvalidatedArgs: pure { _count: initialCount }
   }
   where
-    initialCount = unsafePartial $ fromJust $ (uIntNFromBigNumber s256 $ embed 42)
+  initialCount = unsafePartial $ fromJust $ (uIntNFromBigNumber s256 $ embed 42)

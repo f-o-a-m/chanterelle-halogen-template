@@ -1,7 +1,6 @@
 module Spec.DApp.Deploy.Main (main) where
 
 import Prelude
-
 import Chanterelle.Test (buildTestConfig)
 import Control.Monad.Aff (launchAff)
 import Control.Monad.Aff.AVar (AVAR)
@@ -19,18 +18,23 @@ import Test.Spec.Reporter.Console (consoleReporter)
 import Test.Spec.Runner (PROCESS, run', defaultConfig)
 
 -- | TODO: make the options for deploy config env vars
-main
-  :: forall e.
-     Eff ( console :: CONSOLE
-         , eth :: ETH
-         , avar :: AVAR
-         , fs :: FS
-         , spec_process :: PROCESS
-         , process :: NP.PROCESS
-         | e
-         ) Unit
-main = void $ launchAff do
-  nodeUrl <- liftEff $ fromMaybe "http://localhost:8545" <$> NP.lookupEnv "NODE_URL"
-  testConfig <- buildTestConfig nodeUrl 60 Deploy.deployScript
-  liftEff $ unsafeCoerceEff $ run' defaultConfig {timeout = Just (120 * 1000)} [consoleReporter] do
-    simpleStorageSpec $ testConfig
+main ::
+  forall e.
+  Eff
+    ( console :: CONSOLE
+    , eth :: ETH
+    , avar :: AVAR
+    , fs :: FS
+    , spec_process :: PROCESS
+    , process :: NP.PROCESS
+    | e
+    )
+    Unit
+main =
+  void
+    $ launchAff do
+        nodeUrl <- liftEff $ fromMaybe "http://localhost:8545" <$> NP.lookupEnv "NODE_URL"
+        testConfig <- buildTestConfig nodeUrl 60 Deploy.deployScript
+        liftEff $ unsafeCoerceEff
+          $ run' defaultConfig { timeout = Just (120 * 1000) } [ consoleReporter ] do
+              simpleStorageSpec $ testConfig
