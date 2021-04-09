@@ -5,7 +5,7 @@ import Data.Maybe
 import Prelude
 import Affjax as AX
 import Affjax.ResponseFormat as ResponseFormat
-import App.Component.SRList (SRListQuery(..), srList)
+import App.Component.SRList as SRList
 import App.Config as Config
 import Chanterelle.Internal.Logging (log)
 import Contracts.SuperRare as SuperRare
@@ -45,7 +45,7 @@ main =
     case el of
       Nothing -> unsafeCrashWith "div#app has to be defined"
       Just el' -> do
-        io <- runUI srList unit el'
+        io <- runUI SRList.srList unit el'
         metamask <- liftEffect metamaskProvider
         Console.log $ "got metamask"
         void $ runWeb3 metamask
@@ -81,7 +81,7 @@ main =
         , blockNumber: c.blockNumber
         , imageURL: url
         }
-    _ <- liftAff <<< query <<< H.tell $ AddAssetTransfer newAssetTransfer
+    _ <- liftAff <<< query <<< H.tell $ SRList.AddAssetTransfer newAssetTransfer
     pure ContinueEvent
 
   getImageUrl ipfsUrl = do

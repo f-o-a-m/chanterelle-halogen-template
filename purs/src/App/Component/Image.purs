@@ -13,6 +13,7 @@ import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
 import Unsafe.Coerce (unsafeCoerce)
 import Data.Maybe
+import Prim.RowList
 
 {-
 
@@ -22,19 +23,22 @@ import Data.Maybe
 
 -}
 
-data ImageQuery a
+data Query a
   = LoadFailed a
   | LoadSucceeded a
   | RetryLoading a
 
 data Action = ImageInitialize
-data Input = Unit
-data Message = Void
+
+type Input = Unit
+type Message = Void
+
+type EmptyRow = ()
 
 image
   :: ∀ m.
      MonadAff m
-  => Image -> H.Component HH.HTML ImageQuery Input Message m
+  => Image -> H.Component HH.HTML Query Input Message m
 image initialState =
   H.mkComponent
     { initialState: const initialState
@@ -72,15 +76,15 @@ image initialState =
               ]
 
   eval :: forall i. 
-          H.HalogenQ ImageQuery Action i
-       ~> H.HalogenM Image Action () Message m
+          H.HalogenQ Query Action i
+       ~> H.HalogenM Image Action EmptyRow Message m
   eval = H.mkEval $ H.defaultEval
       { handleQuery = handleQuery
       , handleAction = handleAction
-      , initialize = Just (ImageInitialize :: Action)
+     -- , initialize = Just (ImageInitialize :: Action)
       }
     where
-      handleQuery :: forall a. ImageQuery a -> H.HalogenM Image Action () Message m (Maybe a)
+      handleQuery :: forall a. Query a -> H.HalogenM Image Action EmptyRow Message m (Maybe a)
       handleQuery (LoadFailed next) = do
         st <- H.get
         if st.loadTryCount > 0
@@ -95,4 +99,5 @@ image initialState =
         H.put $ initialImage st.baseURL
         pure (Just next)
 
+      handleAction :: Action -> H.HalogenM Image Action () Message m Unit
       handleAction = pure (unsafeCoerce unit)

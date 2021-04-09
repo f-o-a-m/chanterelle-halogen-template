@@ -20,7 +20,7 @@ type SRList =
 
 initialList :: SRList
 initialList =
-  { transfers: []
+  { transfers: [] 
   , nextId: 1
   }
 

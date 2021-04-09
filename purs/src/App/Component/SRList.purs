@@ -2,7 +2,7 @@ module App.Component.SRList where
 
 import Prelude
 
-import App.Component.AssetTransfer (AssetTransferQuery, assetTransfer)
+import App.Component.AssetTransfer as AssetTransfer
 import App.Model (SRList, AssetTransfer, initialList)
 import Chanterelle.Internal.Utils (assertDirectory)
 import Data.Array (cons, take)
@@ -21,20 +21,27 @@ import Partial.Unsafe (unsafePartial)
   as a fold over the entire event history of the SuperRare contracts.
 -}
 
-_header :: SProxy "srList header"
+_header :: SProxy "header"
 _header = SProxy
 
-data SRListQuery a
+data Query a
   = AddAssetTransfer AssetTransfer a
 
 newtype AssetTransferSlot = AssetTransferSlot Int
 derive instance eqAssetTransferSlot :: Eq AssetTransferSlot
 derive instance ordAssetTransferSlot :: Ord AssetTransferSlot
 
+data Action = InitialAction
+
+type Input = Unit
+type Message = Void
+
+type EmptyRow = ()
+
 srList
   :: forall m.
      MonadAff m
-  => H.Component HH.HTML SRListQuery Unit Void m
+  => H.Component HH.HTML Query Input Message m
 srList =
     H.mkComponent
       { initialState: const initialList
@@ -42,9 +49,7 @@ srList =
       , eval
       }
   where
-    -- render
-    --   :: SRList
-    --   -> H.ParentHTML SRListQuery AssetTransferQuery AssetTransferSlot m
+    render :: SRList -> H.ComponentHTML Action _ m
     render st =
       HH.div [HP.class_ (HH.ClassName "sr-container")]
         [ HH.div [HP.class_ (HH.ClassName "sr-list")]
@@ -55,25 +60,25 @@ srList =
       :: { transferId :: Int
          , transfer :: AssetTransfer
          }
-      -> _ -- H.Component SRListQuery AssetTransferQuery AssetTransferSlot m
+      -> _
     renderTransfer t =
       HH.slot
         _header
         (AssetTransferSlot t.transferId)
-        (assetTransfer t.transfer)
-        (unsafeCoerce unit)
-        absurd
+        (AssetTransfer.assetTransfer t.transfer)
+        unit absurd
 
-    -- eval
-    --   :: SRListQuery ~> H.ParentDSL SRList SRListQuery AssetTransferQuery AssetTransferSlot Void m
+    -- eval :: forall i. 
+    --       H.HalogenQ Query Action i
+    --    ~> H.HalogenM SRList Action EmptyRow Message m
     eval = H.mkEval H.defaultEval
-      { handleAction = handleAction
-      , initialize = Just (unsafeCoerce absurd) --FIXME
+      { handleQuery = handleQuery
       }
-       
-    handleAction (AddAssetTransfer at next) = do
+    
+    handleQuery :: forall a.  Query a -> H.HalogenM _ Action _ Message m (Maybe a)
+    handleQuery (AddAssetTransfer at next) = do
       _ <- H.modify (addTransfer at)
-      pure next
+      pure $ Just next
 
 -- | Adds a transfer to the current state.
 addTransfer

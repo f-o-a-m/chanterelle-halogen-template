@@ -2,8 +2,8 @@ module App.Component.AssetTransfer where
 
 import Prelude
 
-import App.Component.Image (ImageQuery, image, Input)
-import App.Model (AssetTransfer, initialImage)
+import App.Component.Image as Image
+import App.Model (Image, AssetTransfer, initialImage)
 import Data.Maybe (Maybe(..))
 import Data.String as Str
 import Data.Symbol (SProxy(..))
@@ -21,8 +21,13 @@ import Unsafe.Coerce (unsafeCoerce)
   the asset metadata with links to etherscan.
 -}
 
-data AssetTransferQuery a
+data Query a
   = SelectUserAddress Address a
+
+data Action = InitialAction
+
+type Input = Unit
+type Message = Void
 
 _header :: SProxy "header"
 _header = SProxy
@@ -31,7 +36,7 @@ assetTransfer
   :: forall m.
      MonadAff m
   => AssetTransfer
-  -> H.Component HH.HTML AssetTransferQuery Input Void m
+  -> H.Component HH.HTML Query Image.Input Message m
 assetTransfer initialState =
     H.mkComponent
        { initialState: const initialState
@@ -39,9 +44,7 @@ assetTransfer initialState =
        , eval
        }
   where
-    -- render
-    --   :: AssetTransfer
-    --   -> _ AssetTransferQuery ImageQuery Input m
+    render :: AssetTransfer -> H.ComponentHTML Action _ m
     render at = HH.li [HP.class_ (HH.ClassName "sr-tile")]
       [ HH.div [HP.class_ (HH.ClassName "sr-pic")]
         [ ] -- [ renderImage at.imageURL ]
@@ -74,17 +77,21 @@ assetTransfer initialState =
     --   HH.slot
     --     _header
     --     unit
-    --     (image $ initialImage url)
+    --     (Image.image $ initialImage url)
     --     (unsafeCoerce unit)
     --     (unsafeCoerce absurd)
 
     -- eval :: AssetTransferQuery ~> _ AssetTransfer AssetTransferQuery ImageQuery Unit Void m
+    -- eval :: forall i. 
+    --       H.HalogenQ Query Action i
+    --    ~> H.HalogenM Image Action () Message m
     eval = H.mkEval H.defaultEval
-      { handleAction = handleAction
-      , initialize = Just (unsafeCoerce absurd) -- FIXME
+      { handleQuery = handleQuery
+      --, initialize = Just (unsafeCoerce absurd) -- FIXME
       }
-      
-    handleAction (SelectUserAddress _ next) = pure next
+    
+    handleQuery :: forall a.  Query a -> H.HalogenM _ Action () Message m (Maybe a)
+    handleQuery (SelectUserAddress _ next) = pure $ Just next
 
     addressLink :: Address -> _
     addressLink address =
