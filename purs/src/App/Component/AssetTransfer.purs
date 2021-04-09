@@ -21,16 +21,14 @@ import Unsafe.Coerce (unsafeCoerce)
   the asset metadata with links to etherscan.
 -}
 
-data Query a
-  = SelectUserAddress Address a
-
+data Query a = SelectUserAddress Address a
 data Action = InitialAction
-
+type Slots = ( "tokenImage" :: H.Slot Image.Query Image.Message Unit )
 type Input = Unit
 type Message = Void
 
-_header :: SProxy "header"
-_header = SProxy
+_tokenImage :: SProxy "tokenImage"
+_tokenImage = SProxy
 
 assetTransfer
   :: forall m.
@@ -44,10 +42,10 @@ assetTransfer initialState =
        , eval
        }
   where
-    render :: AssetTransfer -> H.ComponentHTML Action _ m
+    render :: AssetTransfer -> H.ComponentHTML Action Slots m
     render at = HH.li [HP.class_ (HH.ClassName "sr-tile")]
       [ HH.div [HP.class_ (HH.ClassName "sr-pic")]
-        [ ] -- [ renderImage at.imageURL ]
+        [ renderImage at.imageURL ]
       , HH.div [HP.class_ (HH.ClassName "sr-info")]
         [ HH.div [HP.class_ (HH.ClassName "sr-info-headings")]
           [ HH.h6_ [HH.text "to: "]
@@ -59,46 +57,43 @@ assetTransfer initialState =
         , HH.div [HP.class_ (HH.ClassName "sr-info-details")]
           [ HH.h5 [ HP.class_ (HH.ClassName "user-address-link")
                   --, HE.onClick \_ -> Just (SelectUserAddress at.to)
-                  ] [] -- [ addressLink at.to ]
+                  ] [ addressLink at.to ]
           , HH.h5 [ HP.class_ (HH.ClassName "user-address-link")
                   --, HE.onClick \_ -> Just (SelectUserAddress at.from)
-                  ] [] -- [ addressLink at.from ]
-          -- , HH.h5_ [HH.text $ show at.tokenId]
-          -- , HH.h5_ [txLink at.transactionHash]
-          -- , HH.h5_ [HH.text $ show $ at.blockNumber]
+                  ] [ addressLink at.from ]
+          , HH.h5_ [HH.text $ show at.tokenId]
+          , HH.h5_ [txLink at.transactionHash]
+          , HH.h5_ [HH.text $ show $ at.blockNumber]
           ]
         ]
       ]
 
-    -- renderImage
-    --   :: String
-    --   -> _ AssetTransferQuery ImageQuery Unit m
-    -- renderImage url = --unsafeCoerce unit
-    --   HH.slot
-    --     _header
-    --     unit
-    --     (Image.image $ initialImage url)
-    --     (unsafeCoerce unit)
-    --     (unsafeCoerce absurd)
+    renderImage
+      :: String
+      -> HH.ComponentHTML Action Slots m
+    renderImage url =
+      HH.slot
+        _tokenImage
+        unit
+        (Image.imageComponent $ initialImage url)
+        unit -- ?
+        absurd -- ?
 
-    -- eval :: AssetTransferQuery ~> _ AssetTransfer AssetTransferQuery ImageQuery Unit Void m
-    -- eval :: forall i. 
-    --       H.HalogenQ Query Action i
-    --    ~> H.HalogenM Image Action () Message m
+    eval :: H.HalogenQ Query Action Input
+         ~> H.HalogenM AssetTransfer Action Slots Message m
     eval = H.mkEval H.defaultEval
       { handleQuery = handleQuery
-      --, initialize = Just (unsafeCoerce absurd) -- FIXME
       }
-    
-    handleQuery :: forall a.  Query a -> H.HalogenM _ Action () Message m (Maybe a)
+
+    handleQuery :: forall a. Query a -> H.HalogenM AssetTransfer Action Slots Message m (Maybe a)
     handleQuery (SelectUserAddress _ next) = pure $ Just next
 
-    addressLink :: Address -> _
+    addressLink :: forall w i. Address -> HH.HTML w i
     addressLink address =
       HH.a [ HP.href $ "https://etherscan.io/address/" <> show address, HP.target "_blank" ]
            [ HH.text $ show address ]
 
-    txLink :: HexString -> _
+    txLink :: forall w i. HexString -> HH.HTML w i
     txLink txHash =
       HH.a [ HP.href $ "https://etherscan.io/tx/" <> show txHash, HP.target "_blank" ]
            [ HH.text $ shortenLink $ show txHash ]

@@ -26,17 +26,15 @@ _header = SProxy
 
 data Query a
   = AddAssetTransfer AssetTransfer a
-
-newtype AssetTransferSlot = AssetTransferSlot Int
-derive instance eqAssetTransferSlot :: Eq AssetTransferSlot
-derive instance ordAssetTransferSlot :: Ord AssetTransferSlot
-
 data Action = InitialAction
+
+newtype Slots = AssetTransferSlot Int
+derive instance eqAssetTransferSlot :: Eq Slots
+derive instance ordAssetTransferSlot :: Ord Slots
 
 type Input = Unit
 type Message = Void
 
-type EmptyRow = ()
 
 srList
   :: forall m.
@@ -66,15 +64,16 @@ srList =
         _header
         (AssetTransferSlot t.transferId)
         (AssetTransfer.assetTransfer t.transfer)
-        unit absurd
+        unit
+        absurd
 
-    -- eval :: forall i. 
+    -- eval :: forall i.
     --       H.HalogenQ Query Action i
     --    ~> H.HalogenM SRList Action EmptyRow Message m
     eval = H.mkEval H.defaultEval
       { handleQuery = handleQuery
       }
-    
+
     handleQuery :: forall a.  Query a -> H.HalogenM _ Action _ Message m (Maybe a)
     handleQuery (AddAssetTransfer at next) = do
       _ <- H.modify (addTransfer at)
