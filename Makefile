@@ -21,7 +21,6 @@ all: install
 
 install: ## Runs npm and bower install
 	npm install
-	spago build
 
 ####################
 # PURESCRIPT       #
