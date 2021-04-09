@@ -28,13 +28,12 @@ data Query a
   = AddAssetTransfer AssetTransfer a
 data Action = InitialAction
 
-newtype Slots = AssetTransferSlot Int
-derive instance eqAssetTransferSlot :: Eq Slots
-derive instance ordAssetTransferSlot :: Ord Slots
+newtype Slots' = AssetTransferSlot Int
+derive instance eqAssetTransferSlot :: Eq Slots'
+derive instance ordAssetTransferSlot :: Ord Slots'
 
 type Input = Unit
 type Message = Void
-
 
 srList
   :: forall m.
@@ -58,7 +57,7 @@ srList =
       :: { transferId :: Int
          , transfer :: AssetTransfer
          }
-      -> _
+      ->  HH.ComponentHTML Action _ m
     renderTransfer t =
       HH.slot
         _header
@@ -67,14 +66,14 @@ srList =
         unit
         absurd
 
-    -- eval :: forall i.
-    --       H.HalogenQ Query Action i
-    --    ~> H.HalogenM SRList Action EmptyRow Message m
+    eval :: forall i.
+          H.HalogenQ Query Action i
+       ~> H.HalogenM SRList Action _ Message m
     eval = H.mkEval H.defaultEval
       { handleQuery = handleQuery
       }
 
-    handleQuery :: forall a.  Query a -> H.HalogenM _ Action _ Message m (Maybe a)
+    handleQuery :: forall a.  Query a -> H.HalogenM SRList Action _ Message m (Maybe a)
     handleQuery (AddAssetTransfer at next) = do
       _ <- H.modify (addTransfer at)
       pure $ Just next
