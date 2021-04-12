@@ -30,7 +30,7 @@ build-contracts: ## Compile all contracts in dapp and write purescript ffi modul
 	chanterelle build
 
 build-purs: ## Build whole purescript src and test file
-	spago -x spago.dhall build
+	spago -x spago.dhall build --purs-args '--codegen corefn,js'
 
 deploy-contracts: ## Deploy contracts in dapp project
 	chanterelle deploy ./output/DApp.Deploy.Script/index.js

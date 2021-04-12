@@ -3,6 +3,7 @@
 /.pulp-cache/
 /.cache/
 /output/
+/dce-output/
 /.psc-package/
 /.psc*
 /.purs*

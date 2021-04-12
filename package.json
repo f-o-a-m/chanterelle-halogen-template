@@ -20,6 +20,7 @@
     "purescript": "^0.13.8",
     "purescript-psa": "^0.7.3",
     "purty": "^7.0.0",
+    "sass": "^1.32.8",
     "sass-lint": "^1.12.1",
     "solc": "^0.6.0",
     "spago": "^0.16.0",
