@@ -1,5 +1,0 @@
-options:
-  config-file: './bower_components/foam.css/.sasslintrc'
-files:
-  include:
-  - './frontend/styles/**/*.s+(a|c)ss'

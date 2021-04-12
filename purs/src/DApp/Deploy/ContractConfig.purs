@@ -2,14 +2,14 @@ module DApp.Deploy.ContractConfig
   ( simpleStorageConfig
   ) where
 
-import Prelude
+import Prelude (pure, ($))
 import Chanterelle.Internal.Types (ContractConfig)
 import Contracts.SimpleStorage as SimpleStorage
 import Network.Ethereum.Web3 (embed)
 import Network.Ethereum.Web3.Solidity (UIntN, uIntNFromBigNumber)
 import Network.Ethereum.Web3.Solidity.Sizes (S256, s256)
-import Partial.Unsafe
-import Data.Maybe
+import Partial.Unsafe (unsafePartial)
+import Data.Maybe (fromJust)
 
 --------------------------------------------------------------------------------
 -- | SimpleStorage
