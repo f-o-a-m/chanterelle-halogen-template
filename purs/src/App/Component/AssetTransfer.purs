@@ -35,8 +35,6 @@ type Input
 type Message
   = Void
 
-
-
 assetTransfer ::
   forall m.
   MonadAff m =>

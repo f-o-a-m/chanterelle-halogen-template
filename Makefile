@@ -36,7 +36,7 @@ deploy-contracts: ## Deploy contracts in dapp project
 	chanterelle deploy ./output/DApp.Deploy.Script/index.js
 
 test-purs-dapp: ## Run the dapp test suite
-	spago -x test.dhall test --src-path purs/src --test-path purs/test -m Spec.DApp.Deploy.Main
+	spago -x test.dhall test  -m Spec.DApp.Deploy.Main
 
 purty: ## run purty to clean up purescript files
 	npm run purty

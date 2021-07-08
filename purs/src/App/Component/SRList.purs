@@ -15,8 +15,6 @@ import Halogen.HTML.Properties as HP
   This component contains the list of all of the AssetCards, it is accumlated
   as a fold over the entire event history of the SuperRare contracts.
 -}
-
-
 data Query a
   = AddAssetTransfer AssetTransfer a
 

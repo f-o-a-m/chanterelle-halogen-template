@@ -16,7 +16,6 @@ import Halogen.HTML.Properties as HP
   and try again.
 -}
 data Query a
-  = Next a
 
 data Action
   = LoadFailed
@@ -79,8 +78,7 @@ imageComponent initialState =
   eval =
     H.mkEval
       $ H.defaultEval
-          { handleQuery = handleQuery
-          , handleAction = handleAction
+          { handleAction = handleAction
           }
     where
     handleAction :: Action -> H.HalogenM Image Action Slots Message m Unit
@@ -97,6 +95,3 @@ imageComponent initialState =
     handleAction (RetryLoading) = do
       st <- H.get
       H.put $ initialImage st.baseURL
-
-    handleQuery :: forall a. Query a -> H.HalogenM Image Action Slots Message m (Maybe a)
-    handleQuery (Next a) = pure (Just a)
