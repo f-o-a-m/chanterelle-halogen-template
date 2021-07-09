@@ -2,7 +2,6 @@ module App.Component.Image where
 
 import Prelude
 import App.Model (Image, ImageLoadState(..), initialImage)
-import Data.Maybe (Maybe(..))
 import Effect.Aff (Milliseconds(..), delay)
 import Effect.Aff.Class (class MonadAff)
 import Halogen as H
@@ -15,6 +14,7 @@ import Halogen.HTML.Properties as HP
   still loading, we indicate this. If the image failed to load, we increment a retry count
   and try again.
 -}
+data Query :: forall k. k -> Type
 data Query a
 
 data Action
@@ -22,6 +22,7 @@ data Action
   | LoadSucceeded
   | RetryLoading
 
+type Slots :: forall k. Row k
 type Slots
   = ()
 
@@ -35,7 +36,7 @@ imageComponent ::
   ∀ m.
   MonadAff m =>
   Image ->
-  H.Component HH.HTML Query Input Message m
+  H.Component Query Input Message m
 imageComponent initialState =
   H.mkComponent
     { initialState: const initialState
@@ -55,8 +56,8 @@ imageComponent initialState =
         HH.img
           [ HP.class_ (HH.ClassName "Image-img")
           , HP.src i.baseURL
-          , HE.onError $ const $ Just LoadFailed
-          , HE.onLoad $ const $ Just LoadSucceeded
+          , HE.onError $ const $ LoadFailed
+          , HE.onLoad $ const $ LoadSucceeded
           ]
     in
       HH.div [ HP.class_ (HH.ClassName $ "Image " <> classNameModifiers) ]
@@ -66,7 +67,7 @@ imageComponent initialState =
             Failed ->
               [ HH.div
                   [ HP.class_ (HH.ClassName "Image-error")
-                  , HE.onClick $ const $ Just RetryLoading
+                  , HE.onClick $ const $ RetryLoading
                   ]
                   []
               ]

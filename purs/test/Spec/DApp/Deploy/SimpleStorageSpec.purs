@@ -33,7 +33,7 @@ simpleStorageSpec ::
       }
   } ->
   SpecT Aff Unit e Unit
-simpleStorageSpec testConfig@{ provider, accounts, simpleStorage } = do
+simpleStorageSpec { provider, accounts, simpleStorage } = do
   let
     primaryAccount = unsafePartial fromJust (accounts !! 0)
 
