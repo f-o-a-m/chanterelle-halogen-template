@@ -1,7 +1,9 @@
 language: node_js
 dist: focal
 sudo: required
-node_js: stable
+node_js: 13
+env:
+  - PATH=$HOME/purescript:$PATH
 install:
   - npm install -g f-o-a-m/chanterelle
   - chanterelle global-postinstall
