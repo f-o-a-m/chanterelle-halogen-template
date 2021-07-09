@@ -3,10 +3,12 @@
 /.pulp-cache/
 /.cache/
 /output/
+/dce-output/
 /.psc-package/
 /.psc*
 /.purs*
 /.psa*
+/.spago/
 /dapp/build/abis//*.json
 *.swp
 .DS_Store

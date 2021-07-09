@@ -4,11 +4,11 @@ contract SimpleStorage {
 
   event CountSet(uint newCount);
   
-  function SimpleStorage(uint _count) {
+  constructor (uint _count) public {
     count = _count;
   }
 
-  function setCount(uint _newCount) {
+  function setCount(uint _newCount) public {
     count = _newCount;
     emit CountSet(_newCount);
   }

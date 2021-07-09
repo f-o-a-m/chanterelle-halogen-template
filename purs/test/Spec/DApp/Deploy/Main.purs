@@ -1,36 +1,24 @@
 module Spec.DApp.Deploy.Main (main) where
 
 import Prelude
-
 import Chanterelle.Test (buildTestConfig)
-import Control.Monad.Aff (launchAff)
-import Control.Monad.Aff.AVar (AVAR)
-import Control.Monad.Aff.Console (CONSOLE)
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Class (liftEff)
-import Control.Monad.Eff.Unsafe (unsafeCoerceEff)
+import DApp.Deploy.Script (deploy) as Deploy
 import Data.Maybe (Maybe(..), fromMaybe)
-import DApp.Deploy.Script (deployScript) as Deploy
-import Spec.DApp.Deploy.SimpleStorageSpec (simpleStorageSpec)
-import Network.Ethereum.Web3 (ETH)
-import Node.FS.Aff (FS)
+import Effect (Effect)
+import Effect.Aff (Milliseconds(..), launchAff)
+import Effect.Class (liftEffect)
 import Node.Process as NP
+import Spec.DApp.Deploy.SimpleStorageSpec (simpleStorageSpec)
 import Test.Spec.Reporter.Console (consoleReporter)
-import Test.Spec.Runner (PROCESS, run', defaultConfig)
+import Test.Spec.Runner (defaultConfig, runSpec')
+import Unsafe.Coerce (unsafeCoerce)
 
--- | TODO: make the options for deploy config env vars
-main
-  :: forall e.
-     Eff ( console :: CONSOLE
-         , eth :: ETH
-         , avar :: AVAR
-         , fs :: FS
-         , spec_process :: PROCESS
-         , process :: NP.PROCESS
-         | e
-         ) Unit
-main = void $ launchAff do
-  nodeUrl <- liftEff $ fromMaybe "http://localhost:8545" <$> NP.lookupEnv "NODE_URL"
-  testConfig <- buildTestConfig nodeUrl 60 Deploy.deployScript
-  liftEff $ unsafeCoerceEff $ run' defaultConfig {timeout = Just (120 * 1000)} [consoleReporter] do
-    simpleStorageSpec $ testConfig
+main :: Effect Unit
+main =
+  void
+    $ launchAff do
+        nodeUrl <- liftEffect $ fromMaybe "http://localhost:8545" <$> NP.lookupEnv "NODE_URL"
+        testConfig <- buildTestConfig nodeUrl 60 Deploy.deploy
+        liftEffect $ unsafeCoerce
+          $ runSpec' defaultConfig { timeout = Just $ Milliseconds (120.0 * 1000.0) } [ consoleReporter ] do
+              simpleStorageSpec $ testConfig
