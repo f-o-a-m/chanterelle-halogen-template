@@ -1,7 +1,7 @@
 language: node_js
 dist: focal
 sudo: required
-node_js: 11
+node_js: stable
 env:
   - PATH=$HOME/purescript:$PATH
 install:
