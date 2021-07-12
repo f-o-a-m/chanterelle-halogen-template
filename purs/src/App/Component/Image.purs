@@ -14,8 +14,8 @@ import Halogen.HTML.Properties as HP
   still loading, we indicate this. If the image failed to load, we increment a retry count
   and try again.
 -}
-data Query :: forall k. k -> Type
-data Query a
+
+data Query (a :: Type)
 
 data Action
   = LoadFailed
