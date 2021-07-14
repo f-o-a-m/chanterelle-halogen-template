@@ -5,7 +5,7 @@ import App.Component.Image as Image
 import App.Model (AssetTransfer, initialImage)
 import Data.Maybe (Maybe(..))
 import Data.String as Str
-import Data.Symbol (SProxy(..))
+import Type.Proxy (Proxy(..))
 import Effect.Aff.Class (class MonadAff)
 import Halogen as H
 import Halogen.HTML as HH
@@ -26,8 +26,8 @@ data Action
 type Slots
   = ( "tokenImage" :: H.Slot Image.Query Image.Message Unit )
 
-_tokenImage :: SProxy "tokenImage"
-_tokenImage = SProxy
+_tokenImage :: Proxy "tokenImage"
+_tokenImage = Proxy
 
 type Input
   = Unit
@@ -39,7 +39,7 @@ assetTransfer ::
   forall m.
   MonadAff m =>
   AssetTransfer ->
-  H.Component HH.HTML Query Image.Input Message m
+  H.Component Query Image.Input Message m
 assetTransfer initialState =
   H.mkComponent
     { initialState: const initialState
@@ -63,12 +63,12 @@ assetTransfer initialState =
           , HH.div [ HP.class_ (HH.ClassName "sr-info-details") ]
               [ HH.h5
                   [ HP.class_ (HH.ClassName "user-address-link")
-                  , HE.onClick $ const $ Just (SelectUserAddress at.to)
+                  , HE.onClick $ const $ SelectUserAddress at.to
                   ]
                   [ addressLink at.to ]
               , HH.h5
                   [ HP.class_ (HH.ClassName "user-address-link")
-                  , HE.onClick $ const $ Just (SelectUserAddress at.from)
+                  , HE.onClick $ const $ SelectUserAddress at.from
                   ]
                   [ addressLink at.from ]
               , HH.h5_ [ HH.text $ show at.tokenId ]
@@ -100,9 +100,6 @@ assetTransfer initialState =
 
   handleQuery :: forall a. Query a -> H.HalogenM AssetTransfer Action Slots Message m (Maybe a)
   handleQuery (Next next) = pure $ Just next
-
-  handleAction :: Action -> H.HalogenM AssetTransfer Action Slots Message m Unit
-  handleAction (SelectUserAddress a) = pure unit
 
   addressLink :: forall w i. Address -> HH.HTML w i
   addressLink address =

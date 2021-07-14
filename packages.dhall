@@ -1,5 +1,5 @@
 let upstream =
-      https://github.com/purescript/package-sets/releases/download/psc-0.13.8-20201007/packages.dhall sha256:35633f6f591b94d216392c9e0500207bb1fec42dd355f4fecdfd186956567b6b
+      https://github.com/purescript/package-sets/releases/download/psc-0.14.2-20210629/packages.dhall sha256:534c490bb73cae75adb5a39871142fd8db5c2d74c90509797a80b8bb0d5c3f7b
 
 let overrides = {=}
 
@@ -24,7 +24,6 @@ let additions =
           , "parsing"
           , "partial"
           , "profunctor-lenses"
-          , "proxy"
           , "psci-support"
           , "tagged"
           , "transformers"
@@ -32,7 +31,7 @@ let additions =
           , "variant"
           ]
         , repo = "https://github.com/f-o-a-m/purescript-web3"
-        , version = "v3.0.0"
+        , version = "v4.0.0"
         }
       , chanterelle =
         { dependencies =
@@ -52,7 +51,7 @@ let additions =
           , "web3-generator"
           ]
         , repo = "https://github.com/f-o-a-m/chanterelle"
-        , version = "v5.0.0"
+        , version = "v6.0.0"
         }
       , web3-generator =
         { dependencies =
@@ -74,7 +73,7 @@ let additions =
           , "yargs"
           ]
         , repo = "https://github.com/f-o-a-m/purescript-web3-generator"
-        , version = "v3.0.0"
+        , version = "v4.0.0"
         }
       , solc =
         { dependencies =
@@ -88,7 +87,7 @@ let additions =
           , "web3"
           ]
         , repo = "https://github.com/f-o-a-m/purescript-solc"
-        , version = "v2.0.0"
+        , version = "v3.0.0"
         }
       , eth-core =
         { dependencies =
@@ -106,7 +105,7 @@ let additions =
           , "simple-json"
           ]
         , repo = "https://github.com/f-o-a-m/purescript-eth-core.git"
-        , version = "v6.0.0"
+        , version = "v7.0.0"
         }
       , coroutine-transducers =
         { dependencies =
@@ -132,8 +131,8 @@ let additions =
         }
       , tagged =
         { dependencies = [ "identity", "profunctor" ]
-        , repo = "https://github.com/LiamGoodacre/purescript-tagged"
-        , version = "v3.0.0"
+        , repo = "https://github.com/kejace/purescript-tagged"
+        , version = "v0.14"
         }
       }
 

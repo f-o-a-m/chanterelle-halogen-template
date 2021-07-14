@@ -5,7 +5,7 @@ import App.Component.AssetTransfer as AssetTransfer
 import App.Model (Transfer, SRList, AssetTransfer, initialList)
 import Data.Array (cons, take)
 import Data.Maybe (Maybe(..))
-import Data.Symbol (SProxy(..))
+import Type.Proxy (Proxy(..))
 import Effect.Aff.Class (class MonadAff)
 import Halogen as H
 import Halogen.HTML as HH
@@ -31,8 +31,8 @@ derive instance ordAssetTransferSlot :: Ord Slots'
 type Slots
   = ( "srHeader" :: H.Slot AssetTransfer.Query Void Slots' )
 
-_srHeader :: SProxy "srHeader"
-_srHeader = SProxy
+_srHeader :: Proxy "srHeader"
+_srHeader = Proxy
 
 type Input
   = Unit
@@ -43,7 +43,7 @@ type Message
 srList ::
   forall m.
   MonadAff m =>
-  H.Component HH.HTML Query Input Message m
+  H.Component Query Input Message m
 srList =
   H.mkComponent
     { initialState: const initialList

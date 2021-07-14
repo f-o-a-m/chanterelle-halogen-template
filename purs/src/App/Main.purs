@@ -1,8 +1,8 @@
 module App.Main (main) where
 
 import Prelude
-import Data.Either (either, fromRight)
-import Data.Maybe (Maybe(..), maybe)
+import Data.Either (either, hush)
+import Data.Maybe (Maybe(..), maybe, fromJust)
 import Affjax as AX
 import Affjax.ResponseFormat as ResponseFormat
 import App.Component.SRList as SRList
@@ -32,7 +32,7 @@ main :: Effect Unit
 main =
   HA.runHalogenAff do
     Console.log $ "hello app"
-    body <- HA.awaitBody
+    _ <- HA.awaitBody
     el <- HA.selectElement $ QuerySelector "#app"
     case el of
       Nothing -> unsafeCrashWith "div#app has to be defined"
@@ -75,11 +75,13 @@ main =
         , blockNumber: c.blockNumber
         , imageURL: url
         }
-    _ <- liftAff <<< query <<< H.tell $ SRList.AddAssetTransfer newAssetTransfer
+    _ <- liftAff <<< query <<< H.mkTell $ SRList.AddAssetTransfer newAssetTransfer
     pure ContinueEvent
 
   getImageUrl ipfsUrl = do
-    resp <- unsafePartial $ fromRight <$> AX.get ResponseFormat.json ipfsUrl
+    resp <- AX.get ResponseFormat.json ipfsUrl
     let
-      mImageUrl = resp.body ^? _Object <<< ix "image" <<< _String
+      parsedResp = unsafePartial $ fromJust $ hush resp
+
+      mImageUrl = parsedResp.body ^? _Object <<< ix "image" <<< _String
     maybe (liftEffect $ throw "Couldn't parse ipfs response") pure $ mImageUrl
