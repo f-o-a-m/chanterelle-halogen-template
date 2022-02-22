@@ -11,7 +11,6 @@ import Node.Process as NP
 import Spec.DApp.Deploy.SimpleStorageSpec (simpleStorageSpec)
 import Test.Spec.Reporter.Console (consoleReporter)
 import Test.Spec.Runner (defaultConfig, runSpec')
-import Unsafe.Coerce (unsafeCoerce)
 
 main :: Effect Unit
 main =
@@ -19,6 +18,5 @@ main =
     $ launchAff do
         nodeUrl <- liftEffect $ fromMaybe "http://localhost:8545" <$> NP.lookupEnv "NODE_URL"
         testConfig <- buildTestConfig nodeUrl 60 Deploy.deploy
-        liftEffect $ unsafeCoerce
-          $ runSpec' defaultConfig { timeout = Just $ Milliseconds (120.0 * 1000.0) } [ consoleReporter ] do
+        runSpec' defaultConfig { timeout = Just $ Milliseconds (120.0 * 1000.0) } [ consoleReporter ] do
               simpleStorageSpec $ testConfig
