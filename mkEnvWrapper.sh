@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 TARGET_FILE=${1:-"injectEnv.sh"}
 
