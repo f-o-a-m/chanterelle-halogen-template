@@ -5,7 +5,7 @@ export
 
 # see https://stackoverflow.com/a/26936855/1798418
 PATH  := node_modules/.bin:$(PATH)
-SHELL := /bin/bash
+SHELL := /bin/sh
 
 NODE_URL ?= http://localhost:8545
 ABI_ROOT ?= abis
